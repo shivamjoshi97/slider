@@ -40,7 +40,7 @@ export const New = () =>
     if(state ===false)
     {
       setIcon(playicon);
-      setAutoplay(setInterval(play_Slides, 2000));
+      setAutoplay(setInterval(play_Slides, 3000));
     }
     else
     {
