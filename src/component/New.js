@@ -11,25 +11,29 @@ import '../App.css';
 import {details} from './details';
 export const New = () => 
 {
-  var [data,setData] = useState({
-    head:'',
-    para:''
-  });
   var [state,setState] = useState(false);
   var [icon,setIcon] = useState(pause);
   var [autopaly,setAutoplay] = useState();
   var play_slideIndex =0;
+  let slideIndex = 1;
   function play_Slides()
   {
     let j;
     let play_slides = document.getElementsByClassName("mySlides");
+    let data_slides = document.getElementsByClassName("user");
+    let dots = document.getElementsByClassName("demo");
     for (j = 0; j < play_slides.length; j++) {
       play_slides[j].style.display = "none";
+      data_slides[j].style.display = "none";
     }
     play_slideIndex++;
+    for (j = 0; j < dots.length; j++) {
+      dots[j].className = dots[j].className.replace(" active", "");
+    }
     if (play_slideIndex > play_slides.length) {play_slideIndex = 1}
+    dots[play_slideIndex-1].className += " active";
     play_slides[play_slideIndex-1].style.display = "block";
-    setData({head:details[play_slideIndex-1].head,para:details[play_slideIndex-1].para});
+    data_slides[play_slideIndex-1].style.display = "block";
   }
   function play(){
     setState(!state);
@@ -44,38 +48,33 @@ export const New = () =>
      clearInterval(autopaly);
     }
   }
-  let slideIndex = 1;
-
-  // Next/previous controls
   function plusSlides(n) {
     showSlides(slideIndex += n);
   }
-  // Thumbnail image controls
   function currentSlide(n) {
     showSlides(slideIndex = n);
-    setData({head:details[n-1].head,para:details[n-1].para})
   }
-
-function showSlides(n) {
-  let i;
-  let slides = document.getElementsByClassName("mySlides");
-  let dots = document.getElementsByClassName("demo");
-  if (n > slides.length) {slideIndex = 1}
-  if (n < 1) {slideIndex = slides.length}
-  for (i = 0; i < slides.length; i++) {
-    slides[i].style.display = "none";
+  function showSlides(n) {
+    let i;
+    let slides = document.getElementsByClassName("mySlides");
+    let dots = document.getElementsByClassName("demo");
+    let data_slides = document.getElementsByClassName("user");
+    if (n > slides.length) {slideIndex = 1}
+    if (n < 1) {slideIndex = slides.length}
+    for (i = 0; i < slides.length; i++) {
+      slides[i].style.display = "none";
+      data_slides[i].style.display = "none";
+    }
+    for (i = 0; i < dots.length; i++) {
+      dots[i].className = dots[i].className.replace(" active", "");
+    }
+    slides[slideIndex-1].style.display = "block";
+    data_slides[slideIndex-1].style.display = "block";
+    dots[slideIndex-1].className += " active";
   }
-  for (i = 0; i < dots.length; i++) {
-    dots[i].className = dots[i].className.replace(" active", "");
-  }
-  slides[slideIndex-1].style.display = "block";
-  dots[slideIndex-1].className += " active";
-}
-   
-      useEffect(() => {
-      showSlides(slideIndex);
-      setData({head:details[0].head,para:details[0].para})
-    }, []);
+  useEffect(() => {
+  showSlides(slideIndex);
+  }, []);
   
   return (
     <>
@@ -131,9 +130,13 @@ function showSlides(n) {
         </div>
         </div>
       </div>
-      <div className="col-lg-3 mydata">
-        <h1>{data.head}</h1>
-        <p>{data.para}</p>
+      <div className="col-lg-3">
+        {details.map((user) => (
+          <div className="user">
+            <h2>{user.head}</h2>
+            <p>{user.para}</p>
+          </div>
+        ))}
       </div>
     </div>
     <div className="row">
@@ -142,6 +145,8 @@ function showSlides(n) {
               <img className="button" src={icon} alt='icon'/>
       </div>
       </div>
+    </div>
+    <div className="row">
     </div>
     </>
   )
